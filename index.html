@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天机玄览 · 手势占卜</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- MediaPipe Hands -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- 粒子背景 -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- 1. 启动页 -->
+  <div id="start-screen" class="screen">
+    <div class="trigram-decoration">☰ ☷</div>
+    <h1 class="title-main">天机玄览</h1>
+    <p class="subtitle">以手通神 · 隔空问卦</p>
+    <button id="start-btn" class="btn-mystic">启 阵</button>
+    <p style="margin-top:1rem;font-size:0.8rem;color:var(--text-dim);">需开启摄像头以识别手势</p>
+  </div>
+
+  <!-- 2. 加载页 -->
+  <div id="loading-screen" class="screen hidden">
+    <div class="spinner-taiji"></div>
+    <p class="loading-text">正在开启天眼...</p>
+  </div>
+
+  <!-- 3. 占卜页 -->
+  <div id="divination-screen" class="screen hidden">
+    <div class="header-bar">
+      <div class="app-title">天机玄览</div>
+      <div class="cam-preview">
+        <video id="input-video" playsinline></video>
+        <canvas id="output-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      <div class="status-icon" id="status-icon">🙏</div>
+      <div class="hint-text" id="hint-text">请举手</div>
+      <div class="hint-sub" id="hint-sub">将手掌置于摄像头前</div>
+    </div>
+
+    <div class="shake-meter">
+      <div class="shake-fill" id="shake-fill"></div>
+    </div>
+    <div class="shake-label" id="shake-label">摇卦感应中</div>
+  </div>
+
+  <!-- 4. 结果页 -->
+  <div id="result-screen" class="screen hidden">
+    <div class="result-card reveal-anim">
+      <div class="hexagram-symbol" id="result-symbol">☰</div>
+      <div class="hexagram-title" id="result-title">乾为天</div>
+      <div class="hexagram-name" id="result-name">乾卦 · Qián</div>
+      <div class="luck-badge" id="result-luck">大吉</div>
+      <div class="divider"></div>
+      <div class="verse-title">卦 辞</div>
+      <div class="verse-content" id="result-verse">元亨利贞。</div>
+      <div class="verse-title">象 曰</div>
+      <div class="meaning-content" id="result-meaning">天行健，君子以自强不息。</div>
+      <button id="retry-btn" class="btn-mystic">再 占 一 卦</button>
+    </div>
+  </div>
+
+  <script src="js/particles.js"></script>
+  <script src="js/divination.js"></script>
+  <script src="js/handTracker.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+/**
+ * 天机玄览 - 国风黑金主题
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
+
+:root {
+  --gold: #C9A227;
+  --gold-light: #E8C766;
+  --gold-dark: #8B6914;
+  --red: #A52A2A;
+  --ink: #0f0f1a;
+  --ink-light: #1a1a2e;
+  --ink-lighter: #252540;
+  --text: #f5f5f0;
+  --text-dim: #a0a0a0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Serif SC', serif;
+  background: radial-gradient(ellipse at center, var(--ink-light) 0%, var(--ink) 100%);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ===== 粒子背景 ===== */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== 屏幕容器 ===== */
+.screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+}
+
+/* ===== 启动页 ===== */
+.title-main {
+  font-size: clamp(3rem, 10vw, 6rem);
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(201, 162, 39, 0.4), 0 4px 10px rgba(0,0,0,0.8);
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  color: var(--text-dim);
+  letter-spacing: 0.5em;
+  margin-bottom: 3rem;
+}
+
+.trigram-decoration {
+  font-size: 4rem;
+  color: var(--gold-dark);
+  opacity: 0.4;
+  margin-bottom: 2rem;
+  animation: rotate-slow 20s linear infinite;
+}
+
+.btn-mystic {
+  padding: 1rem 3rem;
+  font-size: 1.3rem;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  color: var(--gold);
+  background: transparent;
+  border: 2px solid var(--gold);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.2em;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-mystic:hover {
+  background: rgba(201, 162, 39, 0.15);
+  box-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-mystic:active {
+  transform: translateY(0);
+}
+
+.btn-mystic:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 加载页 ===== */
+.spinner-taiji {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(var(--gold) 0deg, transparent 180deg, var(--text) 180deg, transparent 360deg);
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  color: var(--gold-light);
+  letter-spacing: 0.3em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ===== 占卜页 ===== */
+#divination-screen {
+  padding: 1rem;
+}
+
+.header-bar {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.app-title {
+  font-size: 1.2rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+
+.cam-preview {
+  width: 160px;
+  height: 120px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: var(--ink-lighter);
+}
+
+.cam-preview video, .cam-preview canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* 镜像 */
+}
+
+.hint-box {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.hint-text {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(201,162,39,0.3);
+}
+
+.hint-sub {
+  font-size: 1rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.shake-meter {
+  width: min(400px, 80vw);
+  height: 8px;
+  background: var(--ink-lighter);
+  border-radius: 4px;
+  margin: 2rem auto 0;
+  overflow: hidden;
+  border: 1px solid var(--gold-dark);
+}
+
+.shake-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px var(--gold);
+}
+
+.shake-label {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.status-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ===== 结果页 ===== */
+#result-screen {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.result-card {
+  max-width: 600px;
+  width: 100%;
+  background: rgba(15, 15, 26, 0.85);
+  border: 1px solid var(--gold-dark);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,162,39,0.1);
+}
+
+.hexagram-symbol {
+  font-size: 4rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(201,162,39,0.4);
+}
+
+.hexagram-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin-bottom: 0.3rem;
+}
+
+.hexagram-name {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.2em;
+}
+
+.divider {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+  margin: 1.5rem auto;
+}
+
+.verse-title {
+  font-size: 0.9rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+}
+
+.verse-content {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.meaning-content {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 2;
+  margin-bottom: 2rem;
+}
+
+.luck-badge {
+  display: inline-block;
+  padding: 0.4rem 1.5rem;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  margin-bottom: 2rem;
+}
+
+.luck-great { background: rgba(201, 162, 39, 0.2); color: var(--gold-light); border: 1px solid var(--gold); }
+.luck-good { background: rgba(76, 175, 80, 0.2); color: #81c784; border: 1px solid #4caf50; }
+.luck-mixed { background: rgba(255, 152, 0, 0.2); color: #ffb74d; border: 1px solid #ff9800; }
+.luck-bad { background: rgba(165, 42, 42, 0.2); color: #e57373; border: 1px solid var(--red); }
+
+/* ===== 动画 ===== */
+@keyframes breathe {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-anim {
+  animation: reveal 0.8s ease forwards;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 640px) {
+  .cam-preview {
+    width: 120px;
+    height: 90px;
+  }
+  .result-card {
+    padding: 1.5rem 1rem;
+  }
+}
