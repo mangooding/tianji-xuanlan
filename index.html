@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>天机玄览 · 手势占卜</title>
   <link rel="stylesheet" href="css/style.css">
-  <!-- MediaPipe Hands -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- 粒子背景 -->
   <canvas id="particle-canvas"></canvas>
 
   <!-- 1. 启动页 -->
@@ -34,6 +32,10 @@
   <div id="divination-screen" class="screen hidden">
     <div class="header-bar">
       <div class="app-title">天机玄览</div>
+      <div class="top-actions">
+        <button class="icon-btn" id="btn-library" title="卦象图书馆">📖</button>
+        <button class="icon-btn" id="btn-history" title="占卜记录">📜</button>
+      </div>
       <div class="cam-preview">
         <video id="input-video" playsinline></video>
         <canvas id="output-canvas"></canvas>
@@ -44,6 +46,19 @@
       <div class="status-icon" id="status-icon">🙏</div>
       <div class="hint-text" id="hint-text">请举手</div>
       <div class="hint-sub" id="hint-sub">将手掌置于摄像头前</div>
+    </div>
+
+    <!-- 铜钱投掷区 -->
+    <div class="coin-stage hidden" id="coin-stage">
+      <div class="coin-row" id="coin-row">
+        <div class="coin-slot" data-idx="0"><div class="coin hidden" id="coin-0"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+        <div class="coin-slot" data-idx="1"><div class="coin hidden" id="coin-1"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+        <div class="coin-slot" data-idx="2"><div class="coin hidden" id="coin-2"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+        <div class="coin-slot" data-idx="3"><div class="coin hidden" id="coin-3"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+        <div class="coin-slot" data-idx="4"><div class="coin hidden" id="coin-4"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+        <div class="coin-slot" data-idx="5"><div class="coin hidden" id="coin-5"><div class="coin-face coin-front">乾</div><div class="coin-face coin-back">元</div></div></div>
+      </div>
+      <div class="yao-result" id="yao-result"></div>
     </div>
 
     <div class="shake-meter">
@@ -59,16 +74,76 @@
       <div class="hexagram-title" id="result-title">乾为天</div>
       <div class="hexagram-name" id="result-name">乾卦 · Qián</div>
       <div class="luck-badge" id="result-luck">大吉</div>
+      
+      <!-- 变爻信息 -->
+      <div class="changing-lines" id="changing-lines"></div>
+      
       <div class="divider"></div>
+      
       <div class="verse-title">卦 辞</div>
       <div class="verse-content" id="result-verse">元亨利贞。</div>
+      
       <div class="verse-title">象 曰</div>
       <div class="meaning-content" id="result-meaning">天行健，君子以自强不息。</div>
-      <button id="retry-btn" class="btn-mystic">再 占 一 卦</button>
+      
+      <!-- 变卦 -->
+      <div class="changed-hex hidden" id="changed-hex">
+        <div class="divider"></div>
+        <div class="verse-title">之 卦</div>
+        <div class="hexagram-symbol changed-symbol" id="changed-symbol">☷</div>
+        <div class="hexagram-title changed-title" id="changed-title">坤为地</div>
+        <div class="hexagram-name" id="changed-name">坤卦 · Kūn</div>
+        <div class="meaning-content" id="changed-meaning">地势坤，君子以厚德载物。</div>
+      </div>
+      
+      <div class="result-actions">
+        <button id="retry-btn" class="btn-mystic">再 占 一 卦</button>
+        <button id="save-btn" class="btn-mystic btn-secondary">保 存 结 果</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 历史记录页 -->
+  <div id="history-screen" class="screen hidden">
+    <div class="panel-card">
+      <div class="panel-header">
+        <h2>📜 占卜记录</h2>
+        <button class="icon-btn close-panel" data-target="divination">✕</button>
+      </div>
+      <div class="history-list" id="history-list">
+        <div class="empty-state">暂无记录，快去占卜吧</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 卦象图书馆 -->
+  <div id="library-screen" class="screen hidden">
+    <div class="panel-card">
+      <div class="panel-header">
+        <h2>📖 卦象图书馆</h2>
+        <button class="icon-btn close-panel" data-target="divination">✕</button>
+      </div>
+      <div class="hexagram-grid" id="hexagram-grid"></div>
+    </div>
+  </div>
+
+  <!-- 7. 卦象详情弹层 -->
+  <div id="detail-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="icon-btn close-modal">✕</button>
+      <div class="hexagram-symbol" id="detail-symbol">☰</div>
+      <div class="hexagram-title" id="detail-title">乾为天</div>
+      <div class="hexagram-name" id="detail-name">乾卦 · Qián</div>
+      <div class="divider"></div>
+      <div class="verse-title">卦 辞</div>
+      <div class="verse-content" id="detail-verse">元亨利贞。</div>
+      <div class="verse-title">象 曰</div>
+      <div class="meaning-content" id="detail-meaning">天行健，君子以自强不息。</div>
     </div>
   </div>
 
   <script src="js/particles.js"></script>
+  <script src="js/audio.js"></script>
   <script src="js/divination.js"></script>
   <script src="js/handTracker.js"></script>
   <script src="js/app.js"></script>
